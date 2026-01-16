@@ -47,7 +47,7 @@ func NewSortingWriter[T any](output io.Writer, sortRowCount int64, options ...Wr
 		panic(err)
 	}
 	return &SortingWriter[T]{
-		rowbuf: NewRowBuffer[T](&RowGroupConfig{
+		rowbuf: NewRowBuffer[T](0, &RowGroupConfig{
 			Schema:  config.Schema,
 			Sorting: config.Sorting,
 		}),
