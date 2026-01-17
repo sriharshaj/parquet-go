@@ -32,13 +32,13 @@ func TestDedupeRowReader(t *testing.T) {
 		return cmp.Compare(a.Value, b.Value)
 	})
 
-	buffer1 := parquet.NewRowBuffer[Row](0)
+	buffer1 := parquet.NewRowBuffer[Row](0, 0)
 	buffer1.Write(rows)
 
 	buffer1Rows := buffer1.Rows()
 	defer buffer1Rows.Close()
 
-	buffer2 := parquet.NewRowBuffer[Row](0)
+	buffer2 := parquet.NewRowBuffer[Row](0, 0)
 
 	_, err := parquet.CopyRows(buffer2,
 		parquet.DedupeRowReader(buffer1Rows,
@@ -80,13 +80,13 @@ func TestDedupeRowWriter(t *testing.T) {
 		return cmp.Compare(a.Value, b.Value)
 	})
 
-	buffer1 := parquet.NewRowBuffer[Row](0)
+	buffer1 := parquet.NewRowBuffer[Row](0, 0)
 	buffer1.Write(rows)
 
 	buffer1Rows := buffer1.Rows()
 	defer buffer1Rows.Close()
 
-	buffer2 := parquet.NewRowBuffer[Row](0)
+	buffer2 := parquet.NewRowBuffer[Row](0, 0)
 
 	_, err := parquet.CopyRows(
 		parquet.DedupeRowWriter(buffer2,
