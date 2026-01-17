@@ -29,7 +29,7 @@ type RowBuffer[T any] struct {
 }
 
 // NewRowBuffer constructs a new row buffer.
-func NewRowBuffer[T any](options ...RowGroupOption) *RowBuffer[T] {
+func NewRowBuffer[T any](capacity int, options ...RowGroupOption) *RowBuffer[T] {
 	config := DefaultRowGroupConfig()
 	config.Apply(options...)
 	if err := config.Validate(); err != nil {
@@ -49,6 +49,7 @@ func NewRowBuffer[T any](options ...RowGroupOption) *RowBuffer[T] {
 		schema:  config.Schema,
 		sorting: config.Sorting.SortingColumns,
 		compare: config.Schema.Comparator(config.Sorting.SortingColumns...),
+		values:  make([]Value, 0, capacity),
 	}
 }
 

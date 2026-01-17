@@ -81,7 +81,7 @@ func TestRowBuffer(t *testing.T) {
 							}
 
 							content := new(bytes.Buffer)
-							buffer := parquet.NewRowBuffer[any](options...)
+							buffer := parquet.NewRowBuffer[any](0, options...)
 
 							for _, values := range test.values {
 								t.Run("", func(t *testing.T) {
@@ -117,7 +117,7 @@ func testRowBuffer[Row any](t *testing.T) {
 
 func testRowBufferRows[Row any](rows []Row) error {
 	setNullPointers(rows)
-	buffer := parquet.NewRowBuffer[Row]()
+	buffer := parquet.NewRowBuffer[Row](0)
 	_, err := buffer.Write(rows)
 	if err != nil {
 		return err
@@ -269,6 +269,7 @@ func BenchmarkSortRowBuffer(b *testing.B) {
 	}
 
 	buffer := parquet.NewRowBuffer[Row](
+		0,
 		parquet.SortingRowGroupConfig(
 			parquet.SortingColumns(
 				parquet.Ascending("ID"),
@@ -324,7 +325,7 @@ func BenchmarkMergeRowBuffers(b *testing.B) {
 
 	rowGroups := make([]parquet.RowGroup, numBuffers)
 	for i := range rowGroups {
-		buffer := parquet.NewRowBuffer[Row](options...)
+		buffer := parquet.NewRowBuffer[Row](0, options...)
 		buffer.Write(rows[i][:])
 		rowGroups[i] = buffer
 	}
